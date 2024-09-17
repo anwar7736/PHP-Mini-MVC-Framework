@@ -1,0 +1,51 @@
+
+<?php
+    $className = $argv[2]."Controller";
+    $fileName = 'app/Http/Controllers/' . $className . '.php';
+    if (file_exists($fileName)) 
+    {
+        echo "$className already exists";
+        exit;
+    }
+
+    $content = "<?php\n";
+    $content .= "namespace App\Http\Controllers;\n";
+    $content .= "use App\Http\Controllers\Controller;\n";
+    $content .= "class {$className} extends Controller\n{\n";
+    $content .= "    public function __construct()\n";
+    $content .= "    {\n";
+    $content .= "        \n";
+    $content .= "    }\n\n";
+    $content .= "    public function index()\n";
+    $content .= "    {\n";
+    $content .= "        \n";
+    $content .= "    }\n\n";
+    $content .= "    public function create()\n";
+    $content .= "    {\n";
+    $content .= "        \n";
+    $content .= "    }\n\n";
+    $content .= "    public function store()\n";
+    $content .= "    {\n";
+    $content .= "        \n";
+    $content .= "    }\n\n";
+    $content .= "    public function show(\$id)\n";
+    $content .= "    {\n";
+    $content .= "        \n";
+    $content .= "    }\n\n";
+    $content .= "    public function edit(\$id)\n";
+    $content .= "    {\n";
+    $content .= "        \n";
+    $content .= "    }\n\n";
+    $content .= "    public function update(\$id)\n";
+    $content .= "    {\n";
+    $content .= "        \n";
+    $content .= "    }\n\n";
+    $content .= "    public function destroy(\$id)\n";
+    $content .= "    {\n";
+    $content .= "        \n";
+    $content .= "    }\n";
+    $content .= "}\n";
+
+    file_put_contents($fileName, $content);
+    echo "$className created successfully";
+?>

@@ -1,0 +1,41 @@
+<?php 
+    if($argc >= 3)
+    {
+        if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && ( strtolower($argv[3]) == "-mc" ||  strtolower($argv[3]) == "-cm") )
+        {
+            require("./stubs/model.stub");
+            require("./stubs/controller.stub");
+            echo "\n";
+            require("./stubs/middleware.stub");
+        }
+
+        else if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && strtolower($argv[3]) == "-c")
+        {
+            require("./stubs/model.stub");
+            require("./stubs/controller.stub");
+        }
+
+        else if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && strtolower($argv[3]) == "-m")
+        {
+            require("./stubs/model.stub");
+            echo "\n";
+            require("./stubs/middleware.stub");
+        }
+
+        else if( strtolower($argv[1]) == "make:model")
+        {
+            require("./stubs/model.stub");
+        }
+        
+        else if( strtolower($argv[1]) == "make:controller")
+        {
+            require("./stubs/controller.stub");
+        }
+        
+        else if( strtolower($argv[1]) == "make:middleware")
+        {
+            require("./stubs/middleware.stub");
+        }
+    }
+
+?>

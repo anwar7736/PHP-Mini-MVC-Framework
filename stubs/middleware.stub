@@ -1,0 +1,21 @@
+<?php
+    $className = $argv[2]."Middleware";
+    $fileName = 'app/Http/Middleware/' . $className . '.php';
+    if (file_exists($fileName)) 
+    {
+        echo "$className already exists";
+        exit;
+    }
+
+    $content = "<?php\n";
+    $content .= "namespace App\Http\Middleware;\n";
+    $content .= "use App\Http\Middleware\Middleware;\n";
+    $content .= "class $className extends Middleware\n{\n";
+    $content .= "    public function handle()\n";
+    $content .= "    {\n\n";
+    $content .= "    }\n";
+    $content .= "}\n";
+
+    file_put_contents($fileName, $content);
+    echo "$className created successfully";
+?>

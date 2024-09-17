@@ -1,0 +1,20 @@
+{
+    "name": "ac/php-mvc-blog",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "anwar7736",
+            "email": "anwarhossain7736@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Config\\": "config/",
+            "App\\": "app/",
+            "Routes\\": "routes/"
+        }
+    }
+}

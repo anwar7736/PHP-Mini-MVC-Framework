@@ -1,0 +1,24 @@
+<?php
+    $className = $argv[2];
+    $tableName = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $className))."s";
+    $fileName = 'app/Models/' . $className . '.php';
+    if (file_exists($fileName)) 
+    {
+        echo "$className Model already exists";
+        exit;
+    }
+
+    $content = "<?php\n";
+    $content .= "namespace App\Models;\n";
+    $content .= "use App\Models\Model;\n";
+    $content .= "class $className extends Model\n{\n";
+    $content .= "    protected \$table = \"$tableName\";\n";
+    $content .= "    public function __construct()\n";
+    $content .= "    {\n";
+    $content .= "        \n";
+    $content .= "    }\n";
+    $content .= "}\n";
+
+    file_put_contents($fileName, $content);
+    echo "$className Model created successfully";
+?>
