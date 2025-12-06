@@ -1,0 +1,54 @@
+<?php
+    $classNamePrefix = time();
+    $className = $argv[2];
+    $tableName = "";
+    $action = "create";
+    if (isset($argv[3])) {
+        foreach ($argv as $arg) {
+            if (strpos($arg, '--create=') === 0) {
+                $action = "create";
+                $tableName = substr($arg, strlen('--create='));
+            } else if (strpos($arg, '--table=') === 0) {
+                $action = "table";
+                $tableName = substr($arg, strlen('--table='));
+            } else if (in_array(strtolower($arg), ['-m', '-mc', '-cm'])) {
+                $action = "create";
+                $tableName = $argv[2] . "s";
+                $className = "Create" . ucfirst($tableName) . "Table";
+            }
+        }
+    }
+
+    $className = "_".$classNamePrefix."_".$className;
+
+    $tableName = strtolower($tableName);
+
+    $fileName = 'database/migrations/' . $className . '.php';
+    if (file_exists($fileName)) 
+    {
+        echo "$className migration already exists\n";
+        exit;
+    }
+
+    $content  = "<?php\n";
+    $content .= "namespace Database\\Migrations;\n";
+    $content .= "use Config\\Schema;\n";
+    $content .= "use Config\\Blueprint;\n\n";
+    $content .= "class $className\n{\n";
+    $content .= "    public function up()\n";
+    $content .= "    {\n";
+    $content .= "        Schema::".$action."(\"$tableName\", function (Blueprint \$table) {\n";
+    $content .= "            \$table->id();\n";
+    $content .= "            \$table->timestamps();\n";
+    $content .= "        });\n";
+    $content .= "    }\n\n";
+    $content .= "    public function down()\n";
+    $content .= "    {\n";
+    $content .= "        Schema::dropIfExists(\"$tableName\");\n";
+    $content .= "    }\n";
+    $content .= "}\n";
+
+
+    file_put_contents($fileName, $content);
+    echo "$className migration created successfully\n";
+?>

@@ -1,0 +1,120 @@
+<?php 
+    require './config/Schema.php';
+    require './config/Blueprint.php';
+    require './config/errors.php';
+    function getStepFromArgs() {
+        global $argv;
+        foreach ($argv as $arg) {
+            if (strpos($arg, '--step=') === 0) {
+                return substr($arg, strlen('--step='));
+            }
+        }
+        return null;
+    }
+
+    function migrateUpDown($method = 'up') {
+        $migrationsDir = __DIR__ . '/database/migrations';
+        $step = getStepFromArgs();
+        if (!file_exists($migrationsDir)) {
+            mkdir($migrationsDir, 0755, true);
+        }
+
+
+        $migrationFiles = glob($migrationsDir . '/*.php');
+        $currentStep = 0;
+        foreach ($migrationFiles as $migrationFile) {
+
+            if ($step !== null && $currentStep >= $step) {
+                break;
+            }
+
+            require_once $migrationFile;
+
+            $baseClass = pathinfo($migrationFile, PATHINFO_FILENAME);     // CreateStudentsTable
+            $className = "Database\\Migrations\\$baseClass";              // Database\Migrations\CreateStudentsTable
+
+            if (!class_exists($className)) {
+                echo "Class $className not found in $migrationFile\n";
+                continue;
+            }
+
+            $instance = new $className();
+            echo "Running migration: $className\n";
+            
+            if (method_exists($instance, $method)) {
+                $instance->$method();
+                $currentStep++;
+                echo ($method === 'up' ? "Applied" : "Rolled back") . " migration: $className\n";
+            }
+
+        }
+
+
+    }
+    
+    if($argc >= 2)
+    {
+        if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && ( strtolower($argv[3]) == "-mc" ||  strtolower($argv[3]) == "-cm") )
+        {
+            require("./stubs/model.stub");
+            require("./stubs/controller.stub");
+            echo "\n";
+            require("./stubs/migration.stub");
+            echo "\n";
+        }
+
+        else if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && strtolower($argv[3]) == "-c")
+        {
+            require("./stubs/model.stub");
+            require("./stubs/controller.stub");
+        }
+
+        else if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && strtolower($argv[3]) == "-m")
+        {
+            require("./stubs/model.stub");
+            echo "\n";
+            require("./stubs/migration.stub");
+        }
+
+        else if( strtolower($argv[1]) == "make:model")
+        {
+            require("./stubs/model.stub");
+        }
+        
+        else if( strtolower($argv[1]) == "make:controller")
+        {
+            require("./stubs/controller.stub");
+        }
+        
+        else if( strtolower($argv[1]) == "make:middleware")
+        {
+            require("./stubs/middleware.stub");
+        }
+
+        else if( strtolower($argv[1]) == "make:migration")
+        {
+            require("./stubs/migration.stub");
+        }
+
+        else if (strtolower($argv[1]) == "migrate")
+        {
+            migrateUpDown('up');
+            echo "Migrations applied successfully.\n";
+        }
+
+        else if( strtolower($argv[1]) == "migrate:rollback")
+        {
+            migrateUpDown('down');
+            echo "Rolling back migrations...\n";
+        }
+
+        else if( in_array(strtolower($argv[1]), ["migrate:fresh", "migrate:refresh"]))
+        {
+            migrateUpDown('down');
+            echo "Rolling back migrations...\n";
+            migrateUpDown('up');
+            echo "Migrations applied successfully.\n";
+        }
+    }
+
+?>
