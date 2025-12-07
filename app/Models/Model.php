@@ -16,6 +16,7 @@ abstract class Model
     protected $conditions;
     protected $bindings;
     public static $instance;
+
     public function __construct()
     {
         $this->db = getDBConnection();
@@ -68,7 +69,7 @@ abstract class Model
 
     public static function where($column, $operator = null, $value = null, $separator = "AND")
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
 
         if (!$ob->conditions) {
             $ob->conditions = "WHERE";
@@ -204,8 +205,7 @@ abstract class Model
 
     public static function count($column = "*")
     {
-        $ob = self::$instance = self::$instance ?? new static;
-        $ob->table = $ob->getTableName($ob);
+        $ob = static::getModelInstance();
         $query = "SELECT COUNT($column) AS count_result FROM $ob->table $ob->conditions";
         $data = $ob->db->query($query, $ob->bindings)->find();
         $value = 0;
@@ -219,8 +219,7 @@ abstract class Model
 
     public static function sum($column)
     {
-        $ob = self::$instance = self::$instance ?? new static;
-        $ob->table = $ob->getTableName($ob);
+        $ob = static::getModelInstance();
         $query = "SELECT ROUND(SUM($column), 2) AS total FROM $ob->table $ob->conditions";
         $data = $ob->db->query($query, $ob->bindings)->find();
         $value = 0;
@@ -235,8 +234,7 @@ abstract class Model
 
     public static function avg($column)
     {
-        $ob = self::$instance = self::$instance ?? new static;
-        $ob->table = $ob->getTableName($ob);
+        $ob = static::getModelInstance();
         $query = "SELECT ROUND(AVG($column), 2) AS avg FROM $ob->table $ob->conditions";
         $data = $ob->db->query($query, $ob->bindings)->find();
         $value = 0;
@@ -250,8 +248,7 @@ abstract class Model
 
     public static function min($column)
     {
-        $ob = self::$instance = self::$instance ?? new static;
-        $ob->table = $ob->getTableName($ob);
+        $ob = static::getModelInstance();
         $query = "SELECT MIN($column) as min FROM $ob->table $ob->conditions";
         $data = $ob->db->query($query, $ob->bindings)->find();
         $value = 0;
@@ -265,8 +262,7 @@ abstract class Model
 
     public static function max($column)
     {
-        $ob = self::$instance = self::$instance ?? new static;
-        $ob->table = $ob->getTableName($ob);
+        $ob = static::getModelInstance();
         $query = "SELECT MAX($column) AS max FROM $ob->table $ob->conditions";
         $data = $ob->db->query($query, $ob->bindings)->find();
         $value = 0;
@@ -280,7 +276,7 @@ abstract class Model
 
     public static function groupBy(...$columns)
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $columns = implode(", ", $columns);
         $ob->groupBy = "GROUP BY $columns";
         return $ob;
@@ -288,14 +284,14 @@ abstract class Model
 
     public static function having($column, $operator, $value)
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $ob->where($column, $operator, $value, "HAVING");
         return $ob;
     }
 
     public static function orderBy($column, $order_by = "ASC")
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $ob->orderBy = "ORDER BY $column $order_by";
         return $ob;
 
@@ -324,42 +320,42 @@ abstract class Model
 
     public static function limit($value)
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $ob->limit = "LIMIT $value";
         return $ob;
     }
 
     public static function offset($value)
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $ob->offset = "OFFSET $value";
         return $ob;
     }
 
     public static function take($value)
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $ob->limit($value);
         return $ob;
     }
 
     public static function skip($value)
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $ob->offset($value);
         return $ob;
     }
 
     public static function select(...$columns)
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $ob->select = implode(", ", $columns);
         return $ob;
     }
 
     public static function join($table, $condition1, $operator, $condition2 = "", $joinText = "JOIN")
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $op = "=";
         $con2 = $operator;
         if($condition2)
@@ -416,14 +412,14 @@ abstract class Model
 
     public static function all()
     {
-       $ob = self::$instance = self::$instance ?? new static;
+       $ob = static::getModelInstance();
        $query = "SELECT * FROM $ob->table";
        return $ob->db->query($query)->get();
     }
 
     public static function toSql()
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $query = "SELECT $ob->select FROM $ob->table $ob->join $ob->conditions 
                   $ob->groupBy $ob->orderBy $ob->limit $ob->offset";
         return trim($query, implode(",", $ob->bindings));
@@ -431,7 +427,7 @@ abstract class Model
 
     public function first()
 	{
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $query = "SELECT $ob->select FROM $ob->table $ob->join $ob->conditions 
                   $ob->groupBy $ob->orderBy $ob->limit $ob->offset";
         return $ob->db->query($query, $ob->bindings)->find();
@@ -439,7 +435,7 @@ abstract class Model
 	
 	public static function find($id)
 	{
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         if (!$ob->conditions) {
             $ob->conditions = "WHERE id = ?";
         }
@@ -452,7 +448,7 @@ abstract class Model
 	
 	public static function findOrFail($id)
 	{
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         if (!$ob->conditions) {
             $ob->conditions = "WHERE id = ?";
         }
@@ -465,7 +461,7 @@ abstract class Model
 	
     public static function create($data = [])
     {
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
 
         $columns = [];
         $placeholders = [];
@@ -494,7 +490,7 @@ abstract class Model
 	
 	public static function update($data = [])
 	{
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $query1 = "";
         $bindings = [];
         foreach ($data as $key => $value) 
@@ -511,7 +507,7 @@ abstract class Model
 
 	public static function delete()
 	{
-        $ob = self::$instance = self::$instance ?? new static;
+        $ob = static::getModelInstance();
         $query = "DELETE FROM $ob->table $ob->conditions";
 		return $ob->db->query($query, $ob->bindings);
 	}

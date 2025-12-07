@@ -58,9 +58,7 @@
         {
             require("./stubs/model.stub");
             require("./stubs/controller.stub");
-            echo "\n";
             require("./stubs/migration.stub");
-            echo "\n";
         }
 
         else if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && strtolower($argv[3]) == "-c")
@@ -72,7 +70,6 @@
         else if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && strtolower($argv[3]) == "-m")
         {
             require("./stubs/model.stub");
-            echo "\n";
             require("./stubs/migration.stub");
         }
 

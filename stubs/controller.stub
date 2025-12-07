@@ -11,6 +11,7 @@
     $content = "<?php\n";
     $content .= "namespace App\Http\Controllers;\n";
     $content .= "use App\Http\Controllers\Controller;\n";
+    $content .= "use App\Http\Request;\n\n";
     $content .= "class {$className} extends Controller\n{\n";
     $content .= "    public function __construct()\n";
     $content .= "    {\n";
@@ -24,7 +25,7 @@
     $content .= "    {\n";
     $content .= "        \n";
     $content .= "    }\n\n";
-    $content .= "    public function store()\n";
+    $content .= "    public function store(Request \$request)\n";
     $content .= "    {\n";
     $content .= "        \n";
     $content .= "    }\n\n";
@@ -36,7 +37,7 @@
     $content .= "    {\n";
     $content .= "        \n";
     $content .= "    }\n\n";
-    $content .= "    public function update(\$id)\n";
+    $content .= "    public function update(Request \$request, \$id)\n";
     $content .= "    {\n";
     $content .= "        \n";
     $content .= "    }\n\n";
@@ -47,5 +48,5 @@
     $content .= "}\n";
 
     file_put_contents($fileName, $content);
-    echo "$className created successfully";
+    echo "$className created successfully\n";
 ?>

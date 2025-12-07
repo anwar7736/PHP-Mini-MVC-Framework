@@ -9,7 +9,7 @@
 
     $content = "<?php\n";
     $content .= "namespace App\Http\Middleware;\n";
-    $content .= "use App\Http\Middleware\Middleware;\n";
+    $content .= "use App\Http\Middleware\Middleware;\n\n";
     $content .= "class $className extends Middleware\n{\n";
     $content .= "    public function handle()\n";
     $content .= "    {\n\n";
@@ -17,5 +17,5 @@
     $content .= "}\n";
 
     file_put_contents($fileName, $content);
-    echo "$className created successfully";
+    echo "$className created successfully\n";
 ?>
