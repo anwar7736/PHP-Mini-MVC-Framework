@@ -12,13 +12,13 @@ class Log
     protected static function write(string $level, $message)
     {
         // Ensure log directory and file exist
-        $logDir = dirname(static::$logFile);
-        if (!is_dir($logDir)) {
-            mkdir($logDir, 0755, true);
-        }
-        if (!file_exists(static::$logFile)) {
-            touch(static::$logFile);
-        }
+        // $logDir = dirname(static::$logFile);
+        // if (!is_dir($logDir)) {
+        //     mkdir($logDir, 0755, true);
+        // }
+        // if (!file_exists(static::$logFile)) {
+        //     touch(static::$logFile);
+        // }
         
         $time = date('Y-m-d h:i:s');
         // Convert array/object to string

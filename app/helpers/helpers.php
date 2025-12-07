@@ -25,10 +25,22 @@ function base_path($path)
     return BASE_PATH.$path;
 }
 
+function base_path_fixed()
+{
+    // CLI mode
+    if (php_sapi_name() === 'cli') {
+        return realpath('');
+    }
+
+    // Web mode
+    return realpath($_SERVER['DOCUMENT_ROOT'] . '/../');
+}
+
+
 function getDBConnection()
 {
     App::bind('Config\Database', function(){
-        $config   = require base_path('Config/config.php');
+        $config = require base_path_fixed() . '/config/config.php';
         $default  = $config['default'];
         $dbConfig = $config['connections'][$default];
         return new Database($dbConfig, $dbConfig['username'], $dbConfig['password']);

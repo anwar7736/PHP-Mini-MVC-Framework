@@ -1,0 +1,25 @@
+<?php
+// Usage: php artisan make:seeder UserSeeder
+// Or: php yourscript.php make SeederName
+
+$seederName = $argv[2];
+$fileName = "database/seeders/" . $seederName . ".php";
+
+if (file_exists($fileName)) {
+    echo "$seederName already exists\n";
+    exit;
+}
+
+$content  = "<?php\n\n";
+$content .= "namespace Database\Seeders;\n";
+$content .= "use Config\\Seeder;\n\n";
+$content .= "class $seederName extends Seeder\n{\n";
+$content .= "    public function run()\n";
+$content .= "    {\n";
+$content .= "        // TODO: Add your seed logic here\n";
+$content .= "    }\n";
+$content .= "}\n";
+
+file_put_contents($fileName, $content);
+
+echo "$seederName created successfully\n";

@@ -2,6 +2,27 @@
     require './config/Schema.php';
     require './config/Blueprint.php';
     require './config/errors.php';
+    
+    function getSeedFromArgs() {
+        global $argv;
+        foreach ($argv as $arg) {
+            if (strpos($arg, '--seed') === 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function getClassFromArgs() {
+        global $argv;
+        foreach ($argv as $arg) {
+            if (strpos($arg, '--class=') === 0) {
+                return substr($arg, strlen('--class='));
+            }
+        }
+        return null;
+    }
+
     function getStepFromArgs() {
         global $argv;
         foreach ($argv as $arg) {
@@ -12,9 +33,49 @@
         return null;
     }
 
+    function runSeeders()
+    {
+        $seedersDir = __DIR__ . '/database/seeders';
+
+        foreach (glob($seedersDir . '/*.php') as $file) {
+            require_once $file;
+        }
+
+        $class = getClassFromArgs();
+
+        if ($class) {
+            // Run a single seeder
+            $full = "Database\\Seeders\\{$class}";
+            echo "Running single seeder: {$full}\n";
+
+            if (!class_exists($full)) {
+                echo "Seeder {$full} not found\n";
+                return;
+            }
+
+            $instance = new $full();
+            $instance->run();
+            echo "Seeder executed successfully.\n";
+            return;
+        }
+
+        // Run DatabaseSeeder
+        $dbSeeder = "Database\\Seeders\\DatabaseSeeder";
+
+        if (!class_exists($dbSeeder)) {
+            echo "DatabaseSeeder not found\n";
+            return;
+        }
+
+        echo "Running DatabaseSeeder...\n";
+        $instance = new $dbSeeder();
+        $instance->run();
+    }
+
     function migrateUpDown($method = 'up') {
         $migrationsDir = __DIR__ . '/database/migrations';
         $step = getStepFromArgs();
+        $seed = getSeedFromArgs();
         if (!file_exists($migrationsDir)) {
             mkdir($migrationsDir, 0755, true);
         }
@@ -49,8 +110,11 @@
 
         }
 
-
+        if($method == 'up' && $seed){
+            runSeeders();
+        }
     }
+
     
     if($argc >= 2)
     {
@@ -91,6 +155,16 @@
         else if( strtolower($argv[1]) == "make:migration")
         {
             require("./stubs/migration.stub");
+        }
+
+        else if( strtolower($argv[1]) == "make:seeder")
+        {
+            require("./stubs/seeder.stub");
+        }
+
+        else if( strtolower($argv[1]) == "db:seed")
+        {
+            runSeeders();
         }
 
         else if (strtolower($argv[1]) == "migrate")

@@ -25,14 +25,7 @@ class Blueprint
 
     public function __construct($table)
     {
-        App::bind('Config\Database', function(){
-            $config   = require './config/config.php';
-            $default  = $config['default'];
-            $dbConfig = $config['connections'][$default];
-            return new Database($dbConfig, $dbConfig['username'], $dbConfig['password']);
-        });
-    
-        $this->db = App::make('Config\Database');
+        $this->db = getDBConnection();
         $this->table = $table;
     }
 
