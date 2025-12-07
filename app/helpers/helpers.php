@@ -6,6 +6,19 @@ use Config\Database;
 use Config\Response;
 use App\Models\Post;
 use Config\Route;
+use Config\Log;
+
+function writeException($th)
+{
+    Log::error('Exception caught', [
+        'message' => $th->getMessage(),
+        'file'    => $th->getFile(),
+        'line'    => $th->getLine(),
+        'code'    => $th->getCode(),
+        'trace'   => $th->getTraceAsString(),
+        'previous' => $th->getPrevious() ? $th->getPrevious()->getMessage() : null,
+    ]);
+}
 
 function base_path($path)
 {

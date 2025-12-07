@@ -14,7 +14,7 @@ abstract class Model
     protected $limit;
     protected $offset;
     protected $conditions;
-    protected $bindings;
+    protected $bindings = [];
     public static $instance;
 
     public function __construct()
@@ -37,9 +37,8 @@ abstract class Model
 
     protected function tableExists(string $table): bool
     {
-        $stmt = $this->db->prepare("SHOW TABLES LIKE ?");
-        $stmt->execute([$table]);
-        return (bool) $stmt->fetchColumn();
+        $stmt = $this->db->query("SHOW TABLES LIKE '$table'")->find();
+        return (bool) $stmt;
     }
 
     public function getTableName($object): string

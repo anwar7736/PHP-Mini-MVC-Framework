@@ -59,6 +59,7 @@ class AuthController extends Controller
             ]);
 
         } catch (\Throwable $th) {
+            writeException($th);
             return response([
                 'success' => false, 
                 'message'  => $th->getMessage()
@@ -102,7 +103,7 @@ class AuthController extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
-            Log::error("Error: ".$th);
+            writeException($th);
             return response([
                 'success' => false, 
                 'message'  => $th->getMessage()
@@ -180,6 +181,7 @@ class AuthController extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
+            writeException($th);
             return response([
                 'success' => false, 
                 'message'  => $th->getMessage(),

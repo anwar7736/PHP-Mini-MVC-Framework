@@ -73,6 +73,7 @@ class PostController extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
+            writeException($th);
              return response([
                 'success' => false, 
                 'message' => $th->getMessage(),
@@ -166,6 +167,7 @@ class PostController extends Controller
             } 
 
        } catch (\Throwable $th) {
+            writeException($th);
             return response([
                 'success' => false, 
                 'message' => $th->getMessage(),
@@ -194,6 +196,7 @@ class PostController extends Controller
             }
             
         } catch (\Throwable $th) {
+            writeException($th);
             return response([
                 'success' => false, 
                 'message' => $th->getMessage(),

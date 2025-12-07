@@ -11,11 +11,7 @@
     $content = "<?php\n";
     $content .= "namespace App\Models;\n";
     $content .= "use App\Models\Model;\n\n";
-    $content .= "class $className extends Model\n{\n";
-    $content .= "    public function __construct()\n";
-    $content .= "    {\n";
-    $content .= "        \n";
-    $content .= "    }\n";
+    $content .= "class $className extends Model\n{\n\n";
     $content .= "}\n";
 
     file_put_contents($fileName, $content);
