@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Auth\Auth;
 use App\Http\Request;
 use App\Models\Post;
-use App\Validation\Validator;
+use Config\Validator;
 use Config\Hash;
 use App\Models\User;
 use Config\Log;

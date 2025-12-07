@@ -1,5 +1,5 @@
 <?php
-namespace App\Validation;
+namespace Config;
 
 class Validator
 {

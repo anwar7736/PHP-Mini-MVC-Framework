@@ -1,7 +1,7 @@
 <?php
 namespace App\Http;
 
-use App\Validation\Validator;
+use Config\Validator;
 
 class Request 
 {
@@ -69,7 +69,7 @@ class Request
         return user();
     }
 
-public function validate(array $rules)
+    public function validate(array $rules)
     {
         $validator = new Validator();
 
