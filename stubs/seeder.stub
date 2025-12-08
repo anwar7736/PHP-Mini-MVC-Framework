@@ -3,6 +3,9 @@
 // Or: php yourscript.php make SeederName
 
 $seederName = $argv[2];
+if (isset($argv[3]) && str_contains(strtolower($argv[3]), 's') ) {
+    $seederName .= "Seeder";
+}
 $fileName = "database/seeders/" . $seederName . ".php";
 
 if (file_exists($fileName)) {

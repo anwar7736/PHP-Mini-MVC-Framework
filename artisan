@@ -118,28 +118,20 @@
     
     if($argc >= 2)
     {
-        if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && ( strtolower($argv[3]) == "-mc" ||  strtolower($argv[3]) == "-cm") )
+        if( strtolower($argv[1]) == "make:model")
         {
             require("./stubs/model.stub");
-            require("./stubs/controller.stub");
-            require("./stubs/migration.stub");
-        }
-
-        else if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && strtolower($argv[3]) == "-c")
-        {
-            require("./stubs/model.stub");
-            require("./stubs/controller.stub");
-        }
-
-        else if(isset($argv[3]) &&  strtolower($argv[1]) == "make:model" && strtolower($argv[3]) == "-m")
-        {
-            require("./stubs/model.stub");
-            require("./stubs/migration.stub");
-        }
-
-        else if( strtolower($argv[1]) == "make:model")
-        {
-            require("./stubs/model.stub");
+            if(isset($argv[3])){
+                if (str_contains(strtolower($argv[3]), 'm') ) {
+                    require("./stubs/migration.stub");
+                }
+                if (str_contains(strtolower($argv[3]), 'c') ) {
+                    require("./stubs/controller.stub");
+                }
+                if (str_contains(strtolower($argv[3]), 's') ) {
+                    require("./stubs/seeder.stub");
+                }
+            }
         }
         
         else if( strtolower($argv[1]) == "make:controller")
@@ -186,6 +178,76 @@
             migrateUpDown('up');
             echo "Migrations applied successfully.\n";
         }
+    } else{
+    $helpText = "
+    Custom PHP Framework – Command Line Interface
+
+    Usage:
+    php artisan <action> [arguments] [options]
+
+    Available Commands:
+
+    make:model <ModelName> [flags]
+        Create a new model file.
+        Flags (any order):
+            -m     Create migration file
+            -c     Create controller file
+            -s     Create seeder file
+        Examples:
+            php artisan make:model User
+            php artisan make:model Product -m
+            php artisan make:model Order -mc
+            php artisan make:model Invoice -mcs
+
+    make:controller <ControllerName>
+        Create a new controller.
+
+    make:middleware <MiddlewareName>
+        Create a new middleware.
+
+    make:migration <MigrationName>
+        Create a new migration file.
+
+    make:seeder <SeederName>
+        Create a new database seeder.
+
+    migrate
+        Run all pending migrations.
+        Options:
+            --step=<number>   Run limited number of migrations
+            --seed            Run seeders after migrating
+
+    migrate:rollback
+        Rollback last batch of migrations.
+        Options:
+            --step=<number>   Rollback limited number of migrations
+
+    migrate:fresh
+        Drop all tables and re-run all migrations.
+        Options:
+            --seed            Seed database after migration
+
+    migrate:refresh
+        Rollback all migrations and re-run them.
+        Options:
+            --seed            Seed database after migration
+
+    db:seed
+        Run all seeders.
+        Options:
+            --class=SeederClass   Run a single seeder class
+
+    Examples:
+    php artisan migrate
+    php artisan migrate --seed
+    php artisan migrate --step=1
+    php artisan migrate:rollback --step=2
+    php artisan db:seed
+    php artisan db:seed --class=UserSeeder
+    ";
+
+        echo $helpText;
+        exit;
     }
 
 ?>

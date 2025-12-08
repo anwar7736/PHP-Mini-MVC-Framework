@@ -1,6 +1,5 @@
 <?php
     $className = $argv[2];
-    $tableName = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $className))."s";
     $fileName = 'app/Models/' . $className . '.php';
     if (file_exists($fileName)) 
     {

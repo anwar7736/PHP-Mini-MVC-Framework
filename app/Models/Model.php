@@ -486,6 +486,59 @@ abstract class Model
         // Return the newly inserted row
         return $ob->find($id);
     }
+
+    public static function insert($data = [])
+    {
+        $ob = static::getModelInstance();
+
+        // Detect single insert vs batch insert
+        if (isset($data[0]) === false || !is_array($data[0])) {
+            return static::create($data);
+        }
+
+        // If empty or invalid array
+        if (empty($data)) {
+            return false;
+        }
+
+        // Extract columns from the first row
+        $columns = array_keys($data[0]);
+
+        // Prepare SQL parts
+        $columnsSQL = '(' . implode(',', $columns) . ')';
+        $placeholders = '(' . rtrim(str_repeat('?,', count($columns)), ',') . ')';
+
+        $valueRowsSQL = [];
+        $ob->bindings = [];
+
+        // Process each row
+        foreach ($data as $row) {
+            $valueRowsSQL[] = $placeholders;
+
+            foreach ($columns as $col) {
+                $ob->bindings[] = trim($row[$col] ?? null);
+            }
+        }
+
+        // Combine multiple rows placeholder
+        $valuesSQL = 'VALUES ' . implode(',', $valueRowsSQL);
+
+        // Final query
+        $query = "INSERT INTO {$ob->table} {$columnsSQL} {$valuesSQL}";
+
+        // Execute
+        $ob->db->query($query, $ob->bindings);
+
+        // Return:
+        // For batch: number of inserted rows
+        // For single: inserted row
+        if ($isSingle) {
+            $id = $ob->db->lastInsertId();
+            return $ob->find($id);
+        }
+
+        return true; // or return affected rows if your DB layer supports it
+    }
 	
 	public static function update($data = [])
 	{

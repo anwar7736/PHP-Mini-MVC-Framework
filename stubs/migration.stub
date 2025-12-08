@@ -11,7 +11,7 @@
             } else if (strpos($arg, '--table=') === 0) {
                 $action = "table";
                 $tableName = substr($arg, strlen('--table='));
-            } else if (in_array(strtolower($arg), ['-m', '-mc', '-cm'])) {
+            } else if (str_contains(strtolower($arg), 'm')) {
                 $action = "create";
                 $tableName = $argv[2] . "s";
                 $className = "Create" . ucfirst($tableName) . "Table";

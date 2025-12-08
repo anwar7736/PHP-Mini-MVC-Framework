@@ -31,7 +31,7 @@ class DB extends Model
 		return $ob->db->query($query)->get();
     }
 
-    public static function insert(string $query)
+    public static function insertRaw(string $query)
     {
         $ob = self::$instance = self::$instance ?? new static;
         // dd($query);
