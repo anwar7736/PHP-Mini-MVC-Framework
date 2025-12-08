@@ -103,7 +103,7 @@ class PostController extends Controller
     
     public function edit($id)
     {
-        $post = Post::join("users u", "u.id", "posts.user_id")
+        $post = Post::join("users as u", "u.id", "posts.user_id")
                 ->where("posts.id", $id)
                 ->orderByDesc("posts.created_at")
                 ->select("posts.*", "u.name")

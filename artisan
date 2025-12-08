@@ -23,6 +23,16 @@
         return null;
     }
 
+    function getSeederFromArgs() {
+        global $argv;
+        foreach ($argv as $arg) {
+            if (strpos($arg, '--seeder=') === 0) {
+                return substr($arg, strlen('--seeder='));
+            }
+        }
+        return null;
+    }
+
     function getStepFromArgs() {
         global $argv;
         foreach ($argv as $arg) {
@@ -41,7 +51,7 @@
             require_once $file;
         }
 
-        $class = getClassFromArgs();
+        $class = getSeederFromArgs();
 
         if ($class) {
             // Run a single seeder
@@ -74,40 +84,57 @@
 
     function migrateUpDown($method = 'up') {
         $migrationsDir = __DIR__ . '/database/migrations';
-        $step = getStepFromArgs();
-        $seed = getSeedFromArgs();
+        $step  = getStepFromArgs();
+        $seed  = getSeedFromArgs();
+        $class = getClassFromArgs();
         if (!file_exists($migrationsDir)) {
             mkdir($migrationsDir, 0755, true);
         }
 
 
-        $migrationFiles = glob($migrationsDir . '/*.php');
-        $currentStep = 0;
-        foreach ($migrationFiles as $migrationFile) {
+        if ($class) {
+            // Run a single seeder
+            $full = "Database\\Migrations\\{$class}";
+            echo "Running single migration: {$full}\n";
 
-            if ($step !== null && $currentStep >= $step) {
-                break;
+            if (!class_exists($full)) {
+                echo "{$full} migration class not found\n";
+                return;
             }
 
-            require_once $migrationFile;
-
-            $baseClass = pathinfo($migrationFile, PATHINFO_FILENAME);     // CreateStudentsTable
-            $className = "Database\\Migrations\\$baseClass";              // Database\Migrations\CreateStudentsTable
-
-            if (!class_exists($className)) {
-                echo "Class $className not found in $migrationFile\n";
-                continue;
-            }
-
-            $instance = new $className();
-            echo "Running migration: $className\n";
-            
+            $instance = new $full();
             if (method_exists($instance, $method)) {
                 $instance->$method();
-                $currentStep++;
-                echo ($method === 'up' ? "Applied" : "Rolled back") . " migration: $className\n";
+                echo ($method === 'up' ? "Applied" : "Rolled back") . " migration: $class\n";
             }
+        } else{
+            $migrationFiles = glob($migrationsDir . '/*.php');
+            $currentStep = 0;
+            foreach ($migrationFiles as $migrationFile) {
 
+                if ($step !== null && $currentStep >= $step) {
+                    break;
+                }
+
+                require_once $migrationFile;
+
+                $baseClass = pathinfo($migrationFile, PATHINFO_FILENAME);     // CreateStudentsTable
+                $className = "Database\\Migrations\\$baseClass";              // Database\Migrations\CreateStudentsTable
+
+                if (!class_exists($className)) {
+                    echo "Class $className not found in $migrationFile\n";
+                    continue;
+                }
+
+                $instance = new $className();
+                echo "Running migration: $className\n";
+                
+                if (method_exists($instance, $method)) {
+                    $instance->$method();
+                    $currentStep++;
+                    echo ($method === 'up' ? "Applied" : "Rolled back") . " migration: $className\n";
+                }
+            }
         }
 
         if($method == 'up' && $seed){

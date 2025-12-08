@@ -33,7 +33,7 @@ function base_path_fixed()
     }
 
     // Web mode
-    return realpath($_SERVER['DOCUMENT_ROOT'] . '/../');
+    return BASE_PATH;
 }
 
 
