@@ -110,7 +110,7 @@ Example:
 ```php
 $user = User::find(1);
 $users = User::where('active', 1)->get();
-User::create(['name' => 'Alex', 'email' => 'a@example.com']);
+User::create(['name' => 'Alex', 'phone' => '01700000000', 'email' => 'a@example.com']);
 ```
 
 Recommended methods: find, all, where, create, update, delete.
@@ -142,11 +142,16 @@ Use a Validator helper to declare rules and check input.
 Example:
 ```php
 $rules = [
-  'name'  => 'required|string', // or ['required', 'string'],
-  'email' => 'required|email|unique:users',
+  'name'  => 'required|string', // also allowed ['required', 'string'],
+  'email' => 'required|email|unique:users,email',
 ];
 
-$validator = Validator::make($request->all(), $rules);
+$customMessages = [
+    'name.required' => 'Name is required',
+    'email.unique'  => 'This email address already exists.',
+];
+
+$validator = Validator::make($request->all(), $rules, $customMessages);
 
 if ($validator->fails()) {
         return response([
@@ -231,7 +236,7 @@ class UsersTableSeeder
     {
         User::insert([
                 ['name' => 'Alice', 'phone' => '01700000000', 'email' => 'alice@example.com'],
-                ['name' => 'Bob', 'phone' => '01700000000', 'email' => 'bob@example.com']
+                ['name' => 'Bob', 'phone' => '01700000001', 'email' => 'bob@example.com']
             ]);
     }
 }
@@ -250,21 +255,21 @@ A lightweight container resolves dependencies and singletons.
 
 Binding:
 ```php
-$container->bind(\App\Contracts\MailInterface::class, \App\Services\SmtpMailer::class);
+    App::bind('Config\Database', function(){
+        $config = require base_path_fixed() . '/config/config.php';
+        $default  = $config['default'];
+        $dbConfig = $config['connections'][$default];
+        return new Database($dbConfig, $dbConfig['username'], $dbConfig['password']);
+    });
+    
+    return App::make('Config\Database');
 ```
-
-Resolving:
-```php
-$mailer = $container->get(\App\Contracts\MailInterface::class);
-```
-
-Controllers and services may request dependencies via constructor injection if the router/container supports it.
 
 ---
 
 ## Helper Functions
 
-Common helpers in `helpers.php`:
+Common helpers in `app\helpers\helpers.php`:
 
 - env($key, $default = null)
 - config($key, $default = null)

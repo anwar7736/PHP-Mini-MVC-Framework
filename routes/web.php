@@ -4,8 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use Config\Route;
 
-// PostController::class;
-// //PostController
+//PostController
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('/my-post', [PostController::class, 'myPost'])->name('my-post')->middleware('auth');
 Route::get('/post-create', [PostController::class, 'create'])->name('post.create')->middleware('auth');
@@ -16,7 +15,7 @@ Route::put('/post-update/{id}', [PostController::class, 'update'])->name('post.u
 Route::delete('/post-destroy/{id}', [PostController::class, 'destroy'])->name('post.destroy')->middleware('auth');
 
 
-// //Login, Logout, Register and Profile update
+//Login, Logout, Register and Profile update
 Route::get('/login', [AuthController::class, 'loginView'])->name('login.view')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->name('login')->middleware('guest');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
