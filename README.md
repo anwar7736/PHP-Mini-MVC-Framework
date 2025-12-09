@@ -36,23 +36,24 @@ functions, seeders, and CLI commands.
 ## Project Structure
 
 - app/
+    - helpers/         # Global helper functions
     - Http/
-       - Controllers/         # Request handlers
-       - Middleware/          # Request middleware
-       - Request              # Request class
-    - helpers/helpers.php  # Global helper functions
-  - Models/          # Database models / ORM
-  - database
-    - Migrations/    # Schema migrations
-    - Seeders/       # Development data seeders
-- resources/views/   # PHP blade templates
-- config/            # App and database config
-    - App
-- public/            # Document root (index.php)
-- storage/logs/      # Application all logs file here
-- artisan            # Command-line entry (migrate, seed, make:*)
-- routes/web.php     # Route definitions
-- README.md
+       - Controllers/  # Request handlers
+       - Middleware/   # Request middleware
+       - Request       # Request class
+    - Models/          # Database models / ORM
+- config/              # All config files and classes
+- database
+    - migrations/      # Schema migrations
+    - seeders/         # Development data seeders
+- public/              # Document root (index.php)
+- resources/views/     # PHP templates
+- routes/web.php       # Route definitions
+- storage/logs/        # Application all log files
+- stubs/               # Command templates (controller,middleware,migration,model,seeder)
+- vendor/              # All packages are here (composer,vlucas etc.)
+- artisan              # Command-line entry (migrate, seed, make:*)
+- README.md            # Application documentation
 
 ---
 
