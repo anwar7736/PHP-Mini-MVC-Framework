@@ -63,9 +63,9 @@ Routes map HTTP methods and URIs to controllers.
 
 Example:
 ```php
-Route::get('/', [App\Controllers\HomeController::class, 'index']);
-Route::post('/users', [App\Controllers\UserController::class, 'store']);
-Route::get('/users/{id}', [App\Controllers\UserController::class, 'show']);
+Route::get('/', [HomeController::class, 'index']);
+Route::post('/users', [UserController::class, 'store']);
+Route::get('/users/{id}', [UserController::class, 'show']);
 ```
 
 - Path parameters like `{id}` are injected into the controller method.
@@ -79,7 +79,7 @@ Controllers handle requests, orchestrate services/models, and return responses.
 
 Example:
 ```php
-namespace App\Controllers;
+namespace App\Http\Controllers;
 
 use App\Models\User;
 
@@ -119,7 +119,7 @@ Recommended methods: find, all, where, create, update, delete.
 
 ## Views
 
-Views are plain PHP templates stored in `app/Views/`.
+Views are plain PHP templates stored in `resources/views/`.
 
 Render a view with:
 ```php
@@ -199,7 +199,7 @@ class CreateUsersTable
 {
     public function up()
     {
-        Schema::create('users', function ($table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('phone')->unique();
@@ -230,7 +230,7 @@ Seeders populate development data.
 
 Example:
 ```php
-class UsersTableSeeder
+class UsersSeeder
 {
     public function run()
     {
@@ -244,7 +244,7 @@ class UsersTableSeeder
 
 Run seeders:
 ```
-php artisan db:seed --seeder=UsersTableSeeder
+php artisan db:seed --seeder=UsersSeeder
 ```
 
 ---
@@ -283,9 +283,9 @@ Keep helpers minimal and focused.
 
 ---
 
-## CLI Commands
+## Artisan Commands
 
-Provided CLI (in `cli`) for common tasks:
+Provided Artisan (in `artisan`) for common tasks:
 
 - php artisan make:controller Name
 - php artisan make:model Name -mcs //migration, controller & seeder
