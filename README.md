@@ -3,7 +3,7 @@
 A minimal, easy-to-read PHP MVC framework intended for learning and small projects.
 This README shows the main concepts and common tasks: routing, validation,
 models, views, controllers, migrations, middleware, service container, helper
-functions, seeders, and CLI commands.
+functions, seeders, and artisan commands.
 
 ---
 
