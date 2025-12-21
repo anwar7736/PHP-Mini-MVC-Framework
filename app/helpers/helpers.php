@@ -74,7 +74,7 @@ function view($url, $data = [])
 {
     extract($data);
     $url = str_replace('.', '/', $url);
-    require base_path('resources/views/'.$url.'.blade.php');
+    require base_path('resources/views/'.$url.'.php');
 }
 
 function url($url)
@@ -217,7 +217,7 @@ function included($url, $data = [])
 {
     extract($data);
     $url = str_replace('.', '/', $url);
-    include base_path('resources/views/'.$url.'.blade.php');
+    include base_path('resources/views/'.$url.'.php');
 }
 
 function response($response)
