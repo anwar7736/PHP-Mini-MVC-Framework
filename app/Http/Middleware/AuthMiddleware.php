@@ -5,7 +5,7 @@ class AuthMiddleware extends Middleware
 {
     public function handle()
     {
-        if(!isset($_SESSION['user']))
+        if(!isset(auth()->user()))
         {
             return redirect('./login');
         }
