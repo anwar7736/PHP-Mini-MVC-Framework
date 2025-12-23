@@ -197,7 +197,7 @@ Migrations manage schema changes via up() and down() methods.
 
 Example:
 ```php
-class CreateUsersTable
+class _1764838259_CreateUsersTable
 {
     public function up()
     {
