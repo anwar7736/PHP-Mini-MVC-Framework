@@ -173,14 +173,16 @@ Middleware run before/after controller actions for tasks like authentication, CO
 
 Example:
 ```php
-class AuthMiddleware
+namespace App\Http\Middleware;
+use App\Http\Middleware\Middleware;
+class AuthMiddleware extends Middleware
 {
-    public function handle($request, $next)
+    public function handle()
     {
-        if (!session('user_id')) {
-            return redirect('/login');
+        if(!isset(auth()->user()))
+        {
+            return redirect('./login');
         }
-        return $next($request);
     }
 }
 ```
